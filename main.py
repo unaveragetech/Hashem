@@ -5,8 +5,10 @@ import threading
 import platform
 import socket
 import sys
+import hashlib
 
-iterations = 420000
+iterations = 3000
+
 current_iteration = 0
 stop_loading = False
 commands = {"show_all": True}
@@ -26,8 +28,37 @@ def parse_args():
         commands = {key: False for key in commands}
         commands["show_all"] = True
 
-def simulate_hash_work():
-    time.sleep(0.000001)  # Simulate hash calculation time
+def simulate_hash_work(intensity="high"):
+    """
+    Simulates hash work by performing multiple hash calculations on the same data based on the specified intensity.
+
+    Args:
+        intensity (str): Can be 'low', 'medium', or 'high'. Determines the number of iterations and the level of hashing.
+                         'low' = fewer iterations (e.g., simpler chains like Litecoin)
+                         'medium' = standard iterations (e.g., Ethereum)
+                         'high' = higher iterations (e.g., Bitcoin)
+    """
+    # Generate random data for hashing
+    data = os.urandom(64)
+
+    # Set the number of iterations based on the specified intensity
+    if intensity == "low":       # Simulate a simpler blockchain (Litecoin-like)
+        iterations = 100
+    elif intensity == "high":    # Simulate a complex blockchain (Bitcoin-like)
+        iterations = 10000
+    else:                        # Default to medium complexity (Ethereum-like)
+        iterations = 1000
+
+    # Perform a variety of hash algorithms for diversity in complexity
+    for _ in range(iterations):
+        # Apply a mix of hashing algorithms
+        data = hashlib.sha256(data).digest()  # SHA-256, typical for Bitcoin
+        data = hashlib.md5(data).digest()     # MD5, faster and less secure
+        data = hashlib.sha1(data).digest()    # SHA-1 for an additional round
+        data = hashlib.blake2b(data).digest() # Blake2b for variety
+        data = hashlib.sha3_256(data).digest()# SHA-3 variant
+
+    return data
 
 def safe_call(func, default="Permission Denied"):
     try:
