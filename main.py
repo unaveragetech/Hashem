@@ -7,7 +7,8 @@ import socket
 import sys
 import hashlib
 
-iterations = 3000
+iterations = 6500
+
 
 current_iteration = 0
 stop_loading = False
@@ -217,3 +218,5 @@ if __name__ == "__main__":
     # Wait for loading and progress threads to complete
     loading_thread.join()
     progress_thread.join()
+
+p
